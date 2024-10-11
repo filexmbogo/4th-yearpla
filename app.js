@@ -4,9 +4,17 @@ const port =process.env.port||10000
 
 //database
 const mongoose=require("mongoose")
-const url= process.env.MONGODB_URI;
-const conn=mongoose.createConnection(url)
 
+
+
+const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/docs'; 
+
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
 //gridfs to upload and serve files in chunks
 const grid= require('gridfs-stream')
 const {GridFSBucket}= require('mongodb')
