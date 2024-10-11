@@ -4,7 +4,7 @@ const port =process.env.port||10000
 
 //database
 const mongoose=require("mongoose")
-const url='mongodb://127.0.0.1/docs'
+const url='mongodb://mongodb:27017/docs'
 const conn=mongoose.createConnection(url)
 
 //gridfs to upload and serve files in chunks
