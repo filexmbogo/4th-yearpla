@@ -1,20 +1,12 @@
 const express= require ('express')
 const app=express()
-const port =process.env.port||10000
+const port =process.env.port||3000
 
 //database
 const mongoose=require("mongoose")
+const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/docs';
+const conn=mongoose.createConnection(mongoURI)
 
-
-
-const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/docs'; 
-
-mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
 //gridfs to upload and serve files in chunks
 const grid= require('gridfs-stream')
 const {GridFSBucket}= require('mongodb')
