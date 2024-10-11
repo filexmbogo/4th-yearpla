@@ -1,16 +1,18 @@
 version: '3'
 services:
   app:
-    build: .
+    build: .  # Build the Node.js application using the Dockerfile in the current directory
     ports:
-      - "10000:10000"
+      - "10000:10000"  # Map port 10000 on the host to port 10000 in the container
     depends_on:
-      - mongo
+      - mongo  # Ensure mongo starts before your app
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/mydatabase  # Connection string for your app
 
   mongo:
-    image: mongo
+    image: mongo:latest  # Use the latest MongoDB image
     container_name: mongodb
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Expose MongoDB port
     volumes:
-      - ./data/db:/data/db
+      - ./data/db:/data/db  # Persist MongoDB data
