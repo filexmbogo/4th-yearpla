@@ -1,8 +1,13 @@
 # Use an official Node.js image as the base
 FROM node:18
 
-# Install MongoDB and tini (to manage multiple processes)
-RUN apt-get update && apt-get install -y mongodb && apt-get install -y tini
+# Install MongoDB from MongoDB's official repository and tini for multi-process management
+RUN apt-get update && \
+    apt-get install -y gnupg && \
+    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add - && \
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list && \
+    apt-get update && \
+    apt-get install -y mongodb-org tini
 
 # Set the working directory
 WORKDIR /usr/src/app
