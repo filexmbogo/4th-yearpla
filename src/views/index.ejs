@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+</head>
+<body>
+    <h1>Uploaded PDFs</h1>
+
+    <form action="/docs/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="pdf" accept="application/pdf">
+        <button type="submit">Upload PDF</button>
+    </form>
+
+    <h2>Available PDFs:</h2>
+    <ul>
+        <% if(files) { %>
+            <% files.forEach(file => { %>
+                <li>
+                    <a href="/pdf/<%= file._id %>"><%= file.metadata.originalname %></a>
+                </li>
+            <% }) %>
+        <% } else { %>
+            <p>No PDFs uploaded yet.</p>
+        <% } %>
+    </ul>
+
+   
+</body>
+</html>
