@@ -1,36 +1,33 @@
-# Use an official Node.js image as the base
+# Use an official Node.js image as the base image
 FROM node:18
 
-# Install MongoDB from MongoDB's official repository and tini for multi-process management
-RUN apt-get update && \
-    apt-get install -y gnupg && \
-    wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add - && \
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list && \
-    apt-get update && \
-    apt-get install -y mongodb-org tini
+# Set the working directory inside the container
+WORKDIR /app
 
-# Set the working directory
-WORKDIR /usr/src/app
-
-# Install app dependencies
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy the app source code
+# Copy the rest of your application code to the container
 COPY . .
 
-# Expose ports for the Node.js app and MongoDB
-EXPOSE 10000 27017
+# Expose the port your app runs on (e.g., 10000)
+EXPOSE 10000
 
-# Create MongoDB data directory
-RUN mkdir -p /data/db
+# Start the Node.js application
+CMD ["npm", "start"]
 
-# Add an entrypoint script to start both MongoDB and Node.js
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
+# Use the official MongoDB image from Docker Hub
+FROM mongo:latest
 
-# Use tini as the init system
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# Expose the default MongoDB port
+EXPOSE 27017
 
-# Run the entrypoint script to start MongoDB and Node.js
-CMD ["./entrypoint.sh"]
+# Create the directory where MongoDB will store its data
+VOLUME ["/data/db"]
+
+# Start the MongoDB service when the container starts
+CMD ["mongod"]
+
