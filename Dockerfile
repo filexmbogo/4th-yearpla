@@ -1,20 +1,31 @@
-# Use an official Node.js image as the base image
+# Use an official Node.js image as the base
 FROM node:18
 
-# Set the working directory inside the container
-WORKDIR /app
+# Install MongoDB and tini (to manage multiple processes)
+RUN apt-get update && apt-get install -y mongodb && apt-get install -y tini
 
-# Copy package.json and package-lock.json to the container
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of your application code to the container
+# Copy the app source code
 COPY . .
 
-# Expose the port your app runs on (e.g., 10000)
-EXPOSE 10000
+# Expose ports for the Node.js app and MongoDB
+EXPOSE 10000 27017
 
-# Start the Node.js application
-CMD ["npm", "start"]
+# Create MongoDB data directory
+RUN mkdir -p /data/db
+
+# Add an entrypoint script to start both MongoDB and Node.js
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Use tini as the init system
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Run the entrypoint script to start MongoDB and Node.js
+CMD ["./entrypoint.sh"]

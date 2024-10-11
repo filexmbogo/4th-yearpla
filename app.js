@@ -4,7 +4,7 @@ const port =process.env.port||10000
 
 //database
 const mongoose=require("mongoose")
-const mongoURI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/docs';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://27017/docs';
 const conn=mongoose.createConnection(mongoURI)
 
 //gridfs to upload and serve files in chunks
