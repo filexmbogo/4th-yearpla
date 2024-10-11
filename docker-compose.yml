@@ -5,14 +5,14 @@ services:
     ports:
       - "10000:10000"  # Map port 10000 on the host to port 10000 in the container
     depends_on:
-      - mongo  # Ensure mongo starts before your app
+      - mongodb  # Ensure mongo starts before your app
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/mydatabase  # Connection string for your app
+      - MONGODB_URI=mongodb://mongodb:27017/docs # Connection string for your app
 
-  mongo:
-    image: mongo:latest  # Use the latest MongoDB image
-    container_name: mongodb
+  
+  mongodb:
+    image: mongo:latest
     ports:
-      - "27017:27017"  # Expose MongoDB port
+      - "27017:27017"
     volumes:
       - ./data/db:/data/db  # Persist MongoDB data
